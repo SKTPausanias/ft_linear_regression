@@ -7,10 +7,11 @@ class MyLinearRegression():
 	Description:
 	My personnal linear regression class to fit like a boss.
 	"""
-	def __init__(self,  thetas, alpha=0.1, max_iter=1000):
+	def __init__(self,  thetas, alpha=5e-8, max_iter=1500000):
 		self.alpha = alpha
 		self.max_iter = max_iter
-		self.thetas = thetas
+		#self.thetas = np.array(thetas)
+		self.thetas = np.array(thetas)
 
 	def gradient(self, x, y, theta):
 		"""Computes a gradient vector from three non-empty numpy.ndarray, without any for loop. The
@@ -28,8 +29,10 @@ class MyLinearRegression():
 		"""
 		if len(x) < 1 or len(y) < 1 or len(theta) < 1 or x.shape != y.shape or x is None or y is None:
 			return None
+		gr_vec = np.zeros((2,))
 		y_hat = self.predict_(x)
-		gr_vec = (np.matmul(np.transpose(self.add_intercept(x)), (y_hat - y))) / y.shape[0]
+		gr_vec[0] =  np.sum((y_hat - y)) / float(y.shape[0])
+		gr_vec[1] =  np.sum((y_hat - y) * x) / float(y.shape[0])
 		return gr_vec
 
 	def fit_(self, x, y):
@@ -50,6 +53,8 @@ class MyLinearRegression():
 		"""
 		if len(x) < 1 or len(y) < 1 or len(self.thetas) < 1 or x.shape != y.shape or x is None or y is None:
 			return None
+		#x_norm = (x - x.mean()) / x.std()
+		#y_norm = (y - y.mean()) / y.std()
 		for _ in range(self.max_iter):
 			self.thetas -= (self.gradient(x, y, self.thetas) * self.alpha)
 		return self.thetas
@@ -68,7 +73,7 @@ class MyLinearRegression():
 		"""
 		if len(x) < 1 or len(self.thetas) < 1:
 			return None
-		return np.matmul(self.add_intercept(x), self.thetas)
+		return self.thetas[0] + (self.thetas[1] * x)
 
 	def add_intercept(self, x):
 		"""Adds a column of 1's to the non-empty numpy.ndarray x.
@@ -138,16 +143,22 @@ if __name__ == "__main__":
 	x = np.array(data['km'])
 	y = np.array(data['price'])
 
-	lr = MyLinearRegression([1.0, 1.0])
-	print(lr.cost_(lr.predict_(x), y))
-	plt.plot(x, lr.predict_(x))
-	plt.plot(x, y, '.')
-	plt.show()
-	lr.fit_(x, y)
+	lr = MyLinearRegression([-10, 20])
 	print(lr.thetas)
+	print(lr.predict_(x))
+	#print(lr.cost_(lr.predict_(x), y))
+	#plt.plot(x, lr.predict_(x))
+	#plt.plot(x, y, '.')
+	#plt.show()
+	plt.plot(y, x, '--', color='green')
+	plt.plot(lr.predict_(x), x, 'b', color='olive')
+	plt.show()
+	#lr.fit_(x, y)
+	#print(lr.thetas)
 
 	#plt.plot(x, lr.predict_(x))
-	print(lr.cost_(lr.predict_(x), y))
+	#print(lr.cost_(lr.predict_(x), y))
+	#plt.plot(x, y, '.')
 	#plt.plot()
 	#print(lr.predict_(x))
 	#print(lr.cost_elem_(lr.predict_(x), y))
