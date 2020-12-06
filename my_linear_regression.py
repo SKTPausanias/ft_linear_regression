@@ -11,7 +11,7 @@ class MyLinearRegression():
 		self.alpha = alpha
 		self.max_iter = max_iter
 		#self.thetas = np.array(thetas)
-		self.thetas = np.array(thetas)
+		self.thetas = thetas
 
 	def gradient(self, x, y, theta):
 		"""Computes a gradient vector from three non-empty numpy.ndarray, without any for loop. The
