@@ -7,7 +7,7 @@ class MyLinearRegression():
 	Description:
 	My personnal linear regression class to fit like a boss.
 	"""
-	def __init__(self,  thetas, alpha=5e-8, max_iter=1500000):
+	def __init__(self,  thetas, alpha=0.1, max_iter=15000):
 		self.alpha = alpha
 		self.max_iter = max_iter
 		#self.thetas = np.array(thetas)
@@ -53,10 +53,20 @@ class MyLinearRegression():
 		"""
 		if len(x) < 1 or len(y) < 1 or len(self.thetas) < 1 or x.shape != y.shape or x is None or y is None:
 			return None
-		#x_norm = (x - x.mean()) / x.std()
-		#y_norm = (y - y.mean()) / y.std()
+		x_norm = (x - x.mean()) / x.std()
+		y_norm = (y - y.mean()) / y.std()
+		#mileage = x
+		#price = y
+		#mileage = (mileage-min(mileage))/(max(mileage)-min(mileage))
+		#price = (price - min(price)) / (max(price) - min(price))
 		for _ in range(self.max_iter):
-			self.thetas -= (self.gradient(x, y, self.thetas) * self.alpha)
+			self.thetas -= (self.gradient(x_norm, y_norm, self.thetas) * self.alpha)
+		#self.thetas = (self.thetas + x.mean()) * x.std()
+		#self.thetas[0] = self.thetas[0]*(max(y)-min(y)) + min(y) + \
+		#		(self.thetas[1]*min(x)*(min(y)-max(y)))/(max(x)-min(x))
+		#self.thetas[1] = self.thetas[1]*(max(y)-min(y)) / (max(x)-min(x))
+		self.thetas *= (self.thetas.std() ** 2)
+		self.thetas += self.thetas.
 		return self.thetas
 	
 	def predict_(self, x):
@@ -142,24 +152,37 @@ if __name__ == "__main__":
 	data = pd.read_csv("data.csv")
 	x = np.array(data['km'])
 	y = np.array(data['price'])
-
-	lr = MyLinearRegression([-10, 20])
-	print(lr.thetas)
-	print(lr.predict_(x))
-	#print(lr.cost_(lr.predict_(x), y))
+	
+	#inter = ((sum(y) * (sum(x ** 2))) - (sum(x) * (sum(x * y)))) / ((x.shape[0] * sum(x ** 2)) - (sum(x) ** 2))
+	#slope = ((x.shape[0] * sum(x * y)) - (sum(x) * sum(y))) / ((x.shape[0] * sum(x ** 2)) - (sum(x) ** 2))
+	#lr = MyLinearRegression([inter, slope])
+	lr = MyLinearRegression([1250, 0.01])
+	#print(lr.thetas)
+	#print(lr.predict_(x))
+	print(lr.cost_(lr.predict_(x), y))
+	print(lr.mse_(x, y))	
 	#plt.plot(x, lr.predict_(x))
 	#plt.plot(x, y, '.')
 	#plt.show()
 	plt.plot(y, x, '--', color='green')
 	plt.plot(lr.predict_(x), x, 'b', color='olive')
 	plt.show()
-	#lr.fit_(x, y)
-	#print(lr.thetas)
+	
+	lr.fit_(x, y)
+	#x_norm = (x-min(x))/(max(x)-min(x))
+	#y_norm = (y - min(y)) / (max(y) - min(y))
+	x_norm = (x - x.mean()) / x.std()
+	y_norm = (y - y.mean()) / y.std()	
+	print(lr.thetas)
+	print(lr.cost_(lr.predict_(x_norm), y_norm))
+	print(lr.mse_(x_norm, y_norm))	
+	plt.plot(y_norm, x_norm, '--', color='green')
+	plt.plot(lr.predict_(x_norm), x_norm, 'b', color='olive')
+	plt.show()
 
-	#plt.plot(x, lr.predict_(x))
+	#print(lr.thetas)
 	#print(lr.cost_(lr.predict_(x), y))
-	#plt.plot(x, y, '.')
-	#plt.plot()
-	#print(lr.predict_(x))
-	#print(lr.cost_elem_(lr.predict_(x), y))
-	#print(lr.cost_(lr.predict_(x), y))
+	#print(lr.mse_(x, y))	
+	#plt.plot(y, x, '--', color='green')
+	#plt.plot(lr.predict_(x), x, 'b', color='olive')
+	#plt.show()
