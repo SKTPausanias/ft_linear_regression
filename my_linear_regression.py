@@ -75,7 +75,7 @@ class MyLinearRegression():
 		"""
 		if len(x) < 1 or len(self.thetas) < 1:
 			return None
-		return self.thetas[0] + (self.thetas[1] * x)
+		return np.matmul(self.add_intercept(x), self.thetas)
 
 	def add_intercept(self, x):
 		"""Adds a column of 1's to the non-empty numpy.ndarray x.
