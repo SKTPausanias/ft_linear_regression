@@ -151,7 +151,7 @@ if __name__ == "__main__":
 	print(lr.cost_(lr.predict_(x), y))
 	print(lr.mse_(x, y))	
 	plt.plot(y, x, '--', color='green')
-	plt.plot(lr.predict_(x), x, 'b', color='olive')
+	plt.plot(lr.predict_(x), x, color='olive')
 	plt.show()
 	
 	lr.fit_(x, y)
@@ -160,5 +160,5 @@ if __name__ == "__main__":
 	print(lr.cost_(lr.predict_(x), y))
 	print(lr.mse_(x, y))	
 	plt.plot(y, x, '--', color='green')
-	plt.plot(lr.predict_(x), x, 'b', color='olive')
+	plt.plot(lr.predict_(x), x, color='olive')
 	plt.show()

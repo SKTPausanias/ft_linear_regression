@@ -28,5 +28,5 @@ if __name__ == "__main__":
 	print(predict_(x, theta))
 		
 	plt.plot(y, x, '--', color='green')
-	plt.plot(predict_(x, theta), x, 'b', color='olive')
+	plt.plot(predict_(x, theta), x, color='olive')
 	plt.show()
